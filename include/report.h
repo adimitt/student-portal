@@ -20,8 +20,15 @@ public:
     int rowCount() const;
     int totalMarks() const;
 
-    // Writes the report to disk. Returns false when the path is not writable.
+    // Fixed width layout with a ruled header and footer, sized so it prints
+    // cleanly on plain paper without any post processing.
+    std::string renderPlainText() const;
+
+    // Writes the rendered layout to disk. Returns false when the path is
+    // not writable.
     bool writeTo(const std::string &path) const;
+
+    static const int pageWidth = 52;
 
 private:
     std::vector<ReportRow> rows_;

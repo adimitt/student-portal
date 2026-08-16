@@ -1,7 +1,9 @@
 #include "report.h"
 
 #include <fstream>
+#include <iomanip>
 #include <iostream>
+#include <sstream>
 
 void SemesterReport::setHeader(const std::string &rollNumber,
                                const std::string &name,
@@ -32,6 +34,39 @@ int SemesterReport::totalMarks() const {
     return sum;
 }
 
+std::string SemesterReport::renderPlainText() const {
+    std::ostringstream out;
+    std::string rule(pageWidth, '=');
+    std::string thin(pageWidth, '-');
+
+    out << rule << "\n";
+    out << std::left << std::setw(pageWidth) << "SEMESTER REPORT" << "\n";
+    out << rule << "\n";
+    out << std::left << std::setw(14) << "Roll number" << ": " << rollNumber_ << "\n";
+    out << std::left << std::setw(14) << "Name" << ": " << name_ << "\n";
+    out << std::left << std::setw(14) << "Semester" << ": " << semester_ << "\n";
+    out << thin << "\n";
+
+    out << std::left << std::setw(26) << "SUBJECT"
+        << std::right << std::setw(12) << "MARKS"
+        << std::setw(12) << "GRADE" << "\n";
+    out << thin << "\n";
+
+    for (const ReportRow &row : rows_) {
+        out << std::left << std::setw(26) << row.subject
+            << std::right << std::setw(12) << row.marks
+            << std::setw(12) << row.grade << "\n";
+    }
+
+    out << thin << "\n";
+    out << std::left << std::setw(26) << "TOTAL"
+        << std::right << std::setw(12) << totalMarks()
+        << std::setw(12) << rowCount() << "\n";
+    out << rule << "\n";
+
+    return out.str();
+}
+
 bool SemesterReport::writeTo(const std::string &path) const {
     std::ofstream file(path);
     if (!file.is_open()) {
@@ -39,16 +74,7 @@ bool SemesterReport::writeTo(const std::string &path) const {
         return false;
     }
 
-    file << "Semester report\n";
-    file << "Roll number: " << rollNumber_ << "\n";
-    file << "Name       : " << name_ << "\n";
-    file << "Semester   : " << semester_ << "\n\n";
-
-    for (const ReportRow &row : rows_) {
-        file << row.subject << "," << row.marks << "," << row.grade << "\n";
-    }
-
-    file << "\nTotal: " << totalMarks() << " over " << rowCount() << " subject(s)\n";
+    file << renderPlainText();
     std::cout << "Report written to " << path << ".\n";
     return true;
 }
