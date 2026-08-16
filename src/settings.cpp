@@ -1,5 +1,7 @@
 #include "settings.h"
 
+#include "input_utils.h"
+
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
@@ -70,6 +72,39 @@ bool SettingsStore::save(const std::string &path) const {
     file << "decimal_places=" << settings_.decimalPlaces << "\n";
     file << "show_bar_chart=" << (settings_.showBarChart ? "true" : "false") << "\n";
     return true;
+}
+
+void SettingsStore::runMenu(const std::string &configPath) {
+    int changed = 0;
+
+    while (true) {
+        renderCurrent();
+        std::cout << "\n1. Switch grade scale (ten-point / strict)\n"
+                  << "2. Toggle percentage rounding\n"
+                  << "3. Toggle the subject bar chart\n"
+                  << "4. Save and return\n"
+                  << "0. Return without saving\n"
+                  << "Select an option: ";
+
+        int choice = input_utils::readMenuChoice(0, 4);
+        if (choice == 0) {
+            std::cout << "Left settings unchanged on disk.\n";
+            return;
+        }
+        if (choice == 4) {
+            save(configPath);
+            std::cout << changed << " setting(s) written to " << configPath << ".\n";
+            return;
+        }
+        if (choice == 1) {
+            settings_.gradeScale = usesStrictScale() ? "ten-point" : "strict";
+        } else if (choice == 2) {
+            settings_.roundPercentage = !settings_.roundPercentage;
+        } else {
+            settings_.showBarChart = !settings_.showBarChart;
+        }
+        ++changed;
+    }
 }
 
 void SettingsStore::renderCurrent() const {

@@ -25,6 +25,10 @@ public:
     bool load(const std::string &path);
     bool save(const std::string &path) const;
 
+    // Interactive toggles. Writes back to configPath when the user chooses
+    // to save, so the next run starts with the same preferences.
+    void runMenu(const std::string &configPath);
+
 private:
     static bool parseBool(const std::string &value);
 

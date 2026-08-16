@@ -4,6 +4,7 @@
 #include "grade_scale.h"
 #include "input_utils.h"
 #include "profile.h"
+#include "settings.h"
 
 #include <iomanip>
 #include <iostream>
@@ -11,11 +12,14 @@
 
 namespace {
 
+const char *kConfigPath = "data/portal.conf";
+
 void showMenu(const Session &session) {
     std::cout << "\n=== Student Portal (" << session.username << ") ===\n"
               << "1. Marks calculator\n"
               << "2. View and edit profile\n"
               << "3. Dashboard\n"
+              << "4. Settings\n"
               << "0. Sign out\n"
               << "Select an option: ";
 }
@@ -82,6 +86,9 @@ Dashboard seededDashboard() {
 int main() {
     std::cout << "Student portal starting up.\n";
 
+    SettingsStore settings;
+    settings.load(kConfigPath);
+
     ProfileBook book;
     book.loadFromFile("data/profiles.txt");
     Dashboard board = seededDashboard();
@@ -95,7 +102,7 @@ int main() {
 
     while (true) {
         showMenu(session);
-        int choice = input_utils::readMenuChoice(0, 3);
+        int choice = input_utils::readMenuChoice(0, 4);
         if (choice == 0) {
             std::cout << "Signing off, " << session.username << ".\n";
             break;
@@ -104,8 +111,10 @@ int main() {
             runMarksCalculator();
         } else if (choice == 2) {
             runProfileScreen(book, session);
-        } else {
+        } else if (choice == 3) {
             runDashboard(board);
+        } else {
+            settings.runMenu(kConfigPath);
         }
     }
     return 0;
