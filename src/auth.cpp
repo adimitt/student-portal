@@ -29,7 +29,8 @@ bool AuthStore::verify(const std::string &username, const std::string &password)
     return account->passwordHash == hash(password);
 }
 
-bool AuthStore::authenticate(std::string &usernameOut, std::string &roleOut) const {
+Session AuthStore::authenticate() const {
+    Session session;
     std::string username;
     std::string password;
 
@@ -40,9 +41,12 @@ bool AuthStore::authenticate(std::string &usernameOut, std::string &roleOut) con
         std::getline(std::cin, password);
 
         if (verify(username, password)) {
-            usernameOut = username;
-            roleOut = find(username)->role;
-            return true;
+            session.username = username;
+            session.role = find(username)->role;
+            session.active = true;
+            std::cout << "Signed in as " << session.username
+                      << " (" << session.role << ").\n";
+            return session;
         }
 
         int left = maxAttempts - attempt;
@@ -50,7 +54,7 @@ bool AuthStore::authenticate(std::string &usernameOut, std::string &roleOut) con
     }
 
     std::cout << "Account locked for this session.\n";
-    return false;
+    return session;
 }
 
 long AuthStore::hash(const std::string &password) {

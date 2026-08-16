@@ -12,6 +12,16 @@ struct Credential {
     long passwordHash;
 };
 
+// Who is currently signed in. An inactive session means the portal should
+// fall back to the login prompt rather than showing the menu.
+struct Session {
+    std::string username;
+    std::string role;
+    bool active = false;
+
+    bool isFaculty() const { return role == "faculty" || role == "admin"; }
+};
+
 // In memory account store seeded with the demo accounts used by the portal.
 class AuthStore {
 public:
@@ -24,8 +34,8 @@ public:
     bool verify(const std::string &username, const std::string &password) const;
 
     // Prompts on the console until the credentials match or the attempt
-    // budget runs out. The matched role is written to roleOut on success.
-    bool authenticate(std::string &usernameOut, std::string &roleOut) const;
+    // budget runs out. Returns an inactive Session when it runs out.
+    Session authenticate() const;
 
     static long hash(const std::string &password);
     static const int maxAttempts = 3;
