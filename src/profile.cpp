@@ -1,8 +1,10 @@
 #include "profile.h"
 
 #include <cstdlib>
+#include <fstream>
 #include <iomanip>
 #include <iostream>
+#include <sstream>
 
 ProfileBook::ProfileBook() {
     profiles_.push_back({"2026201055", "Aditya Mittal", "M.Tech CSE",
@@ -37,6 +39,46 @@ StudentProfile *ProfileBook::findByRollMutable(const std::string &rollNumber) {
 
 size_t ProfileBook::size() const {
     return profiles_.size();
+}
+
+bool ProfileBook::loadFromFile(const std::string &path) {
+    std::ifstream file(path);
+    if (!file.is_open()) {
+        std::cout << "No profile data at " << path << ", using seeded records.\n";
+        return false;
+    }
+
+    std::vector<StudentProfile> loaded;
+    std::string line;
+    while (std::getline(file, line)) {
+        if (line.empty() || line[0] == '#') {
+            continue;
+        }
+
+        std::stringstream stream(line);
+        std::string field;
+        std::vector<std::string> fields;
+        while (std::getline(stream, field, ',')) {
+            fields.push_back(field);
+        }
+        if (fields.size() != 5) {
+            std::cout << "Skipping malformed profile line: " << line << "\n";
+            continue;
+        }
+
+        StudentProfile profile;
+        profile.rollNumber = fields[0];
+        profile.name = fields[1];
+        profile.programme = fields[2];
+        profile.email = fields[3];
+        profile.semester = std::atoi(fields[4].c_str());
+        loaded.push_back(profile);
+    }
+
+    if (!loaded.empty()) {
+        profiles_ = loaded;
+    }
+    return true;
 }
 
 void ProfileBook::render(const StudentProfile &profile) const {

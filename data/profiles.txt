@@ -1,0 +1,6 @@
+# roll,name,programme,email,semester
+# Lines starting with # are ignored by ProfileBook::loadFromFile.
+2026201055,Aditya Mittal,M.Tech CSE,aditya.mittal@students.example.edu,3
+2026201042,Rhea Nair,M.Tech CSE,rhea.nair@students.example.edu,3
+2026201078,Karan Bose,M.Tech ECE,karan.bose@students.example.edu,2
+2026201091,Meera Iyer,M.Tech CSE,meera.iyer@students.example.edu,1

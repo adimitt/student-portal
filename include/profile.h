@@ -23,6 +23,11 @@ public:
     StudentProfile *findByRollMutable(const std::string &rollNumber);
     size_t size() const;
 
+    // Replaces the seeded records with the contents of a data file. Each
+    // line is roll,name,programme,email,semester. Returns false when the
+    // file cannot be opened, leaving the seeded records in place.
+    bool loadFromFile(const std::string &path);
+
     // Prints one record as a label/value block with the values aligned.
     void render(const StudentProfile &profile) const;
     void renderAll() const;
