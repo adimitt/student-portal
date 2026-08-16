@@ -93,7 +93,8 @@ void SettingsStore::runMenu(const std::string &configPath) {
         }
         if (choice == 4) {
             save(configPath);
-            std::cout << changed << " setting(s) written to " << configPath << ".\n";
+            std::cout << changed << (changed == 1 ? " setting" : " settings")
+                      << " written to " << configPath << ".\n";
             return;
         }
         if (choice == 1) {
