@@ -1,5 +1,6 @@
 #include "profile.h"
 
+#include <cstdlib>
 #include <iomanip>
 #include <iostream>
 
@@ -18,6 +19,15 @@ const std::vector<StudentProfile> &ProfileBook::all() const {
 
 const StudentProfile *ProfileBook::findByRoll(const std::string &rollNumber) const {
     for (const StudentProfile &profile : profiles_) {
+        if (profile.rollNumber == rollNumber) {
+            return &profile;
+        }
+    }
+    return nullptr;
+}
+
+StudentProfile *ProfileBook::findByRollMutable(const std::string &rollNumber) {
+    for (StudentProfile &profile : profiles_) {
         if (profile.rollNumber == rollNumber) {
             return &profile;
         }
@@ -46,4 +56,64 @@ void ProfileBook::renderAll() const {
     }
     std::cout << "------------------------------\n";
     std::cout << profiles_.size() << " profile(s) on record.\n";
+}
+
+bool ProfileBook::isValidEmail(const std::string &email) {
+    size_t at = email.find('@');
+    if (at == std::string::npos || at == 0) {
+        return false;
+    }
+    size_t dot = email.find('.', at);
+    return dot != std::string::npos && dot + 1 < email.size();
+}
+
+bool ProfileBook::isValidSemester(int semester) {
+    return semester >= 1 && semester <= 8;
+}
+
+int ProfileBook::editInteractive(StudentProfile &profile) const {
+    std::string entry;
+    int changed = 0;
+
+    std::cout << "Leave a field blank to keep the current value.\n";
+
+    std::cout << "Name [" << profile.name << "]: ";
+    std::getline(std::cin, entry);
+    if (!entry.empty()) {
+        profile.name = entry;
+        ++changed;
+    }
+
+    std::cout << "Programme [" << profile.programme << "]: ";
+    std::getline(std::cin, entry);
+    if (!entry.empty()) {
+        profile.programme = entry;
+        ++changed;
+    }
+
+    std::cout << "Email [" << profile.email << "]: ";
+    std::getline(std::cin, entry);
+    if (!entry.empty()) {
+        if (isValidEmail(entry)) {
+            profile.email = entry;
+            ++changed;
+        } else {
+            std::cout << "  rejected, an email needs a name, an @ and a domain.\n";
+        }
+    }
+
+    std::cout << "Semester [" << profile.semester << "]: ";
+    std::getline(std::cin, entry);
+    if (!entry.empty()) {
+        int semester = std::atoi(entry.c_str());
+        if (isValidSemester(semester)) {
+            profile.semester = semester;
+            ++changed;
+        } else {
+            std::cout << "  rejected, semester must be between 1 and 8.\n";
+        }
+    }
+
+    std::cout << changed << " field(s) updated.\n";
+    return changed;
 }
