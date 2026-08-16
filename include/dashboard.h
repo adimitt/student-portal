@@ -38,6 +38,10 @@ public:
     void recordGradeEntry(const std::string &name, int marks, int maxMarks = 100);
     void refresh() const;
 
+    // Writes the summary as CSV so it can be opened in a spreadsheet.
+    // Returns false when the destination cannot be written.
+    bool exportCsv(const std::string &path) const;
+
     static const int requiredAttendance = 75;
     static const int chartWidth = 40;
 

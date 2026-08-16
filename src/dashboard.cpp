@@ -1,5 +1,6 @@
 #include "dashboard.h"
 
+#include <fstream>
 #include <iomanip>
 #include <iostream>
 
@@ -117,4 +118,24 @@ void Dashboard::refresh() const {
     renderSummary();
     renderAttendancePanel();
     renderBarChart();
+}
+
+bool Dashboard::exportCsv(const std::string &path) const {
+    std::ofstream file(path);
+    if (!file.is_open()) {
+        std::cout << "Could not open " << path << " for writing.\n";
+        return false;
+    }
+
+    file << "subject,marks,max_marks\n";
+    for (const SubjectRecord &record : subjects_) {
+        file << record.name << "," << record.marks << "," << record.maxMarks << "\n";
+    }
+
+    file << "TOTAL," << totalObtained() << "," << totalPossible() << "\n";
+    file << "attendance_attended," << attended_ << ",\n";
+    file << "attendance_held," << held_ << ",\n";
+
+    std::cout << "Summary exported to " << path << ".\n";
+    return true;
 }
