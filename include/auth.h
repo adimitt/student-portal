@@ -20,7 +20,15 @@ public:
     const std::vector<Credential> &accounts() const;
     const Credential *find(const std::string &username) const;
 
+    // True when the username exists and the password checksum matches.
+    bool verify(const std::string &username, const std::string &password) const;
+
+    // Prompts on the console until the credentials match or the attempt
+    // budget runs out. The matched role is written to roleOut on success.
+    bool authenticate(std::string &usernameOut, std::string &roleOut) const;
+
     static long hash(const std::string &password);
+    static const int maxAttempts = 3;
 
 private:
     std::vector<Credential> accounts_;
