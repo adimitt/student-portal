@@ -4,6 +4,7 @@
 #include "grade_scale.h"
 #include "input_utils.h"
 #include "profile.h"
+#include "report.h"
 #include "settings.h"
 
 #include <iomanip>
@@ -20,6 +21,7 @@ void showMenu(const Session &session) {
               << "2. View and edit profile\n"
               << "3. Dashboard\n"
               << "4. Settings\n"
+              << "5. Export semester report\n"
               << "0. Sign out\n"
               << "Select an option: ";
 }
@@ -72,6 +74,35 @@ void runDashboard(Dashboard &board) {
     }
 }
 
+// The report stores the award as text while GradeScale still hands back a
+// single char, so the two are bridged here in one place.
+std::string gradeText(const GradeScale &scale, double percentage) {
+    return std::string(1, scale.letterGrade(percentage));
+}
+
+void runReportExport(const Session &session, const ProfileBook &book,
+                     const SettingsStore &settings) {
+    const StudentProfile *mine = book.findByRoll(session.username);
+    if (mine == nullptr) {
+        std::cout << "No profile is linked to " << session.username << ".\n";
+        return;
+    }
+
+    GradeScale scale(settings.usesStrictScale());
+    SemesterReport report;
+    report.setHeader(mine->rollNumber, mine->name, mine->semester);
+
+    const char *subjects[] = {"Maths", "Physics", "Chemistry", "English", "CS"};
+    const int marks[] = {78, 65, 91, 54, 83};
+    for (int i = 0; i < 5; ++i) {
+        report.addRow(subjects[i], marks[i], gradeText(scale, marks[i]));
+    }
+
+    std::string path = "data/report_" + mine->rollNumber + ".txt";
+    std::cout << report.renderPlainText();
+    report.writeTo(path);
+}
+
 Dashboard seededDashboard() {
     Dashboard board;
     board.addSubject("Maths", 78);
@@ -104,7 +135,7 @@ int main() {
 
     while (true) {
         showMenu(session);
-        int choice = input_utils::readMenuChoice(0, 4);
+        int choice = input_utils::readMenuChoice(0, 5);
         if (choice == 0) {
             std::cout << "Signing off, " << session.username << ".\n";
             break;
@@ -115,8 +146,10 @@ int main() {
             runProfileScreen(book, session);
         } else if (choice == 3) {
             runDashboard(board);
-        } else {
+        } else if (choice == 4) {
             settings.runMenu(kConfigPath);
+        } else {
+            runReportExport(session, book, settings);
         }
     }
     return 0;
