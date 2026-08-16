@@ -85,3 +85,24 @@ void Dashboard::renderAttendancePanel() const {
               << (meetsAttendanceRule() ? "eligible for exams"
                                         : "short of attendance") << "\n";
 }
+
+void Dashboard::renderBarChart() const {
+    std::cout << "\n--- Subject wise marks ---\n";
+    if (subjects_.empty()) {
+        std::cout << "Nothing to plot yet.\n";
+        return;
+    }
+
+    for (const SubjectRecord &record : subjects_) {
+        int filled = 0;
+        if (record.maxMarks > 0) {
+            filled = (record.marks * chartWidth) / record.maxMarks;
+        }
+
+        std::cout << std::left << std::setw(14) << record.name << "|";
+        for (int column = 0; column < chartWidth; ++column) {
+            std::cout << (column < filled ? '#' : ' ');
+        }
+        std::cout << "| " << record.marks << "\n";
+    }
+}

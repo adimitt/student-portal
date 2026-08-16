@@ -29,7 +29,12 @@ public:
     void renderSummary() const;
     void renderAttendancePanel() const;
 
+    // Subject wise marks drawn as a bar chart, scaled so the longest bar
+    // fills chartWidth columns.
+    void renderBarChart() const;
+
     static const int requiredAttendance = 75;
+    static const int chartWidth = 40;
 
 private:
     std::vector<SubjectRecord> subjects_;
