@@ -1,8 +1,8 @@
-#include "utils.h"
+#include "input_utils.h"
 
 #include <iostream>
 
-namespace utils {
+namespace input_utils {
 
 std::string trim(const std::string &text) {
     size_t first = text.find_first_not_of(" \t\r\n");

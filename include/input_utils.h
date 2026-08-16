@@ -1,12 +1,12 @@
-#ifndef UTILS_H
-#define UTILS_H
+#ifndef INPUT_UTILS_H
+#define INPUT_UTILS_H
 
 #include <string>
 #include <vector>
 
 // Console input helpers. Every read re-prompts until the value parses,
 // so the menu loop never has to deal with a failed stream.
-namespace utils {
+namespace input_utils {
 
 std::string trim(const std::string &text);
 bool parseInt(const std::string &text, int &out);
