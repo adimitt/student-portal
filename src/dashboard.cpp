@@ -35,6 +35,26 @@ double Dashboard::overallPercentage() const {
     return (static_cast<double>(totalObtained()) / possible) * 100.0;
 }
 
+void Dashboard::setAttendance(int classesAttended, int classesHeld) {
+    if (classesHeld < 0 || classesAttended < 0 || classesAttended > classesHeld) {
+        std::cout << "Attendance figures rejected, attended cannot exceed held.\n";
+        return;
+    }
+    attended_ = classesAttended;
+    held_ = classesHeld;
+}
+
+double Dashboard::attendancePercentage() const {
+    if (held_ == 0) {
+        return 0.0;
+    }
+    return (static_cast<double>(attended_) / held_) * 100.0;
+}
+
+bool Dashboard::meetsAttendanceRule() const {
+    return attendancePercentage() >= requiredAttendance;
+}
+
 void Dashboard::renderSummary() const {
     std::cout << "\n--- Semester summary ---\n";
     std::cout << std::left << std::setw(14) << "Subject"
@@ -52,4 +72,16 @@ void Dashboard::renderSummary() const {
               << std::setw(8) << totalPossible() << "\n";
     std::cout << std::fixed << std::setprecision(2)
               << "Overall: " << overallPercentage() << " %\n";
+}
+
+void Dashboard::renderAttendancePanel() const {
+    std::cout << "\n--- Attendance ---\n";
+    std::cout << "Classes held     : " << held_ << "\n";
+    std::cout << "Classes attended : " << attended_ << "\n";
+    std::cout << std::fixed << std::setprecision(2)
+              << "Attendance       : " << attendancePercentage() << " %\n";
+    std::cout << "Requirement      : " << requiredAttendance << " %\n";
+    std::cout << "Status           : "
+              << (meetsAttendanceRule() ? "eligible for exams"
+                                        : "short of attendance") << "\n";
 }

@@ -20,10 +20,21 @@ public:
     int totalPossible() const;
     double overallPercentage() const;
 
+    // Attendance is tracked separately from marks because the institute
+    // rule is a straight percentage of classes held.
+    void setAttendance(int classesAttended, int classesHeld);
+    double attendancePercentage() const;
+    bool meetsAttendanceRule() const;
+
     void renderSummary() const;
+    void renderAttendancePanel() const;
+
+    static const int requiredAttendance = 75;
 
 private:
     std::vector<SubjectRecord> subjects_;
+    int attended_ = 0;
+    int held_ = 0;
 };
 
 #endif
