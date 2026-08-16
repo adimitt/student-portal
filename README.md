@@ -87,3 +87,24 @@ Enter the number of the option and press return. Option `1` prompts for
 subject marks and prints the percentage together with the GPA on the ten
 point scale. Option `3` renders the semester summary with an attendance
 panel. Option `0` leaves the portal.
+
+## Contributing
+
+### Branch naming
+
+| Prefix       | Used for                                 | Example                     |
+|--------------|------------------------------------------|-----------------------------|
+| `feature/`   | a new user facing module                 | `feature/dashboard`         |
+| `chore/`     | restructuring with no behaviour change   | `chore/project-restructure` |
+| `hotfix/`    | a correction to already merged behaviour | `hotfix/grade-boundaries`   |
+| `experiment/`| exploratory work that may be dropped     | `experiment/report-export`  |
+
+Branch off `main`, keep the branch focused on one module, and merge back with
+`--no-ff` so the history keeps the shape of the work.
+
+### Commit messages
+
+Written as `type: imperative summary in lower case`, where type is one of
+`feat`, `fix`, `docs`, `refactor`, `build`, `test`, `chore` or `merge`.
+The summary states what changed and why it was needed; bare messages such as
+"fix" or "update" are not accepted.
