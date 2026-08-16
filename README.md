@@ -17,3 +17,14 @@ The portal is organised around five modules:
 
 The original implementation is preserved under `legacy/` for reference and is
 not part of the build.
+
+## Prerequisites
+
+| Tool | Minimum version | Check with       |
+|------|-----------------|------------------|
+| g++  | 9 (C++17)       | `g++ --version`  |
+| make | 3.81            | `make --version` |
+| git  | 2.30            | `git --version`  |
+
+Developed against Apple clang 21.0.0 and GNU Make 3.81 on macOS. Any Linux
+distribution with a C++17 capable g++ builds it without changes.
