@@ -3,7 +3,8 @@
 
 #include <vector>
 
-// Arithmetic used by the marks calculator screen of the portal.
+// Pure arithmetic for the marks screen. Grade boundaries deliberately live
+// in GradeScale so that this class stays free of policy.
 class Calculator {
 public:
     double add(double a, double b) const;
@@ -19,10 +20,6 @@ public:
     double percentage(const std::vector<int> &marks, int maxPerSubject) const;
     double weightedAverage(const std::vector<double> &marks,
                            const std::vector<double> &weights) const;
-
-    // Grade reporting on the ten point scale.
-    double gpaFromPercentage(double percentage) const;
-    char letterGrade(double percentage) const;
 };
 
 #endif

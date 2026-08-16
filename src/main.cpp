@@ -1,4 +1,5 @@
 #include "calculator.h"
+#include "grade_scale.h"
 #include "input_utils.h"
 
 #include <iomanip>
@@ -16,6 +17,7 @@ void showMenu() {
 
 void runMarksCalculator() {
     Calculator calc;
+    GradeScale scale;
 
     std::cout << "Number of subjects (1-10): ";
     int subjects = input_utils::readMenuChoice(1, 10);
@@ -25,8 +27,9 @@ void runMarksCalculator() {
     std::cout << std::fixed << std::setprecision(2);
     std::cout << "Total      : " << calc.total(marks) << " / " << subjects * 100 << "\n";
     std::cout << "Percentage : " << pct << " %\n";
-    std::cout << "GPA        : " << calc.gpaFromPercentage(pct) << "\n";
-    std::cout << "Grade      : " << calc.letterGrade(pct) << "\n";
+    std::cout << "GPA        : " << scale.gpaFromPercentage(pct) << "\n";
+    std::cout << "Grade      : " << scale.letterGrade(pct) << "\n";
+    std::cout << "Result     : " << (scale.isPass(pct) ? "PASS" : "FAIL") << "\n";
 }
 
 }
