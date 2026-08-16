@@ -68,3 +68,22 @@ student-portal/
 
 `bin/` is produced by the build and is deliberately not tracked; see
 `.gitignore`.
+
+## Using the portal
+
+On launch the portal asks for credentials, then prints the main menu:
+
+```
+=== Student Portal ===
+1. Marks calculator
+2. View profile
+3. Dashboard
+4. Settings
+0. Exit
+Select an option:
+```
+
+Enter the number of the option and press return. Option `1` prompts for
+subject marks and prints the percentage together with the GPA on the ten
+point scale. Option `3` renders the semester summary with an attendance
+panel. Option `0` leaves the portal.
