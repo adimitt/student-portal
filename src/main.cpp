@@ -74,10 +74,10 @@ void runDashboard(Dashboard &board) {
     }
 }
 
-// The report stores the award as text while GradeScale still hands back a
-// single char, so the two are bridged here in one place.
+// GradeScale returns the award as text since the half bands landed, so the
+// report can take it straight through.
 std::string gradeText(const GradeScale &scale, double percentage) {
-    return std::string(1, scale.letterGrade(percentage));
+    return scale.letterGrade(percentage);
 }
 
 void runReportExport(const Session &session, const ProfileBook &book,
