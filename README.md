@@ -5,15 +5,17 @@ overhaul of a legacy single file portal into a modular codebase.
 
 ## Scope
 
-The portal is organised around five modules:
+The portal is organised around six modules:
 
 | Module     | Responsibility                            |
 |------------|-------------------------------------------|
-| calculator | marks, percentage and GPA computation     |
-| auth       | login and session handling                |
+| calculator | marks, percentage and weighted averages   |
+| grade      | GPA and letter award on the ten point scale |
+| auth       | login, attempt limiting and sessions      |
 | profile    | student enrollment details                |
-| dashboard  | semester summary and attendance view      |
+| dashboard  | semester summary, attendance and charts   |
 | settings   | grade scale and display preferences       |
+| report     | printable end of semester report          |
 
 The original implementation is preserved under `legacy/` for reference and is
 not part of the build.
@@ -53,6 +55,17 @@ The executable is written to `bin/portal` and can also be launched directly:
 ./bin/portal
 ```
 
+Sign in with roll number `2026201055` and password `portal123` to reach the
+menu with the seeded data.
+
+The grade scale unit has its own boundary test, which is not part of the
+portal build:
+
+```
+g++ -std=c++17 -Iinclude tests/grade_scale_test.cpp src/grade_scale.cpp -o bin/grade_scale_test
+./bin/grade_scale_test
+```
+
 ## Directory layout
 
 ```
@@ -61,6 +74,7 @@ student-portal/
 ├── include/    public headers shared between modules
 ├── data/       plain text fixtures loaded at startup
 ├── docs/       notes carried over from the legacy portal
+├── tests/      standalone checks, built by hand
 ├── legacy/     original single file portal, excluded from the build
 ├── Makefile    build entry point
 └── README.md
@@ -76,10 +90,11 @@ On launch the portal asks for credentials, then prints the main menu:
 ```
 === Student Portal ===
 1. Marks calculator
-2. View profile
+2. View and edit profile
 3. Dashboard
 4. Settings
-0. Exit
+5. Export semester report
+0. Sign out
 Select an option:
 ```
 
@@ -108,3 +123,22 @@ Written as `type: imperative summary in lower case`, where type is one of
 `feat`, `fix`, `docs`, `refactor`, `build`, `test`, `chore` or `merge`.
 The summary states what changed and why it was needed; bare messages such as
 "fix" or "update" are not accepted.
+
+## Release notes
+
+### v1.0
+
+First tagged release, covering the full overhaul of the legacy portal.
+
+- modular layout, headers under `include/` and one translation unit per module
+- marks calculator with checked division, weighted averages and percentages
+- grade awards on the ten point scale, including the A- and B+ half bands
+- login with attempt limiting and a session carried through the menu
+- profile records loaded from `data/profiles.txt`, editable with validation
+- dashboard with semester totals, attendance panel, bar chart and CSV export
+- settings persisted to `data/portal.conf`, including the strict grade scale
+- printable semester report written to `data/report_<roll>.txt`
+
+The strict scale and the half bands were developed on separate branches and
+their grade tables were reconciled by hand when `hotfix/grade-boundaries` was
+merged; a strict run now shifts the half bands too.
