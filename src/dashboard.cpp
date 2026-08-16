@@ -106,3 +106,15 @@ void Dashboard::renderBarChart() const {
         std::cout << "| " << record.marks << "\n";
     }
 }
+
+void Dashboard::recordGradeEntry(const std::string &name, int marks, int maxMarks) {
+    addSubject(name, marks, maxMarks);
+    std::cout << "Recorded " << marks << "/" << maxMarks << " for " << name << ".\n";
+    refresh();
+}
+
+void Dashboard::refresh() const {
+    renderSummary();
+    renderAttendancePanel();
+    renderBarChart();
+}

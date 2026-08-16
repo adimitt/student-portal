@@ -1,5 +1,6 @@
 #include "auth.h"
 #include "calculator.h"
+#include "dashboard.h"
 #include "grade_scale.h"
 #include "input_utils.h"
 #include "profile.h"
@@ -14,6 +15,7 @@ void showMenu(const Session &session) {
     std::cout << "\n=== Student Portal (" << session.username << ") ===\n"
               << "1. Marks calculator\n"
               << "2. View and edit profile\n"
+              << "3. Dashboard\n"
               << "0. Sign out\n"
               << "Select an option: ";
 }
@@ -50,6 +52,31 @@ void runProfileScreen(ProfileBook &book, const Session &session) {
     }
 }
 
+void runDashboard(Dashboard &board) {
+    board.refresh();
+
+    std::cout << "\nAdd a grade entry? 1 = yes, 0 = no: ";
+    if (input_utils::readMenuChoice(0, 1) == 1) {
+        std::cout << "Subject name: ";
+        std::string subject;
+        std::getline(std::cin, subject);
+        std::cout << "Marks out of 100: ";
+        int marks = input_utils::readMenuChoice(0, 100);
+        board.recordGradeEntry(subject, marks, 100);
+    }
+}
+
+Dashboard seededDashboard() {
+    Dashboard board;
+    board.addSubject("Maths", 78);
+    board.addSubject("Physics", 65);
+    board.addSubject("Chemistry", 91);
+    board.addSubject("English", 54);
+    board.addSubject("CS", 83);
+    board.setAttendance(58, 72);
+    return board;
+}
+
 }
 
 int main() {
@@ -57,6 +84,7 @@ int main() {
 
     ProfileBook book;
     book.loadFromFile("data/profiles.txt");
+    Dashboard board = seededDashboard();
 
     AuthStore store;
     Session session = store.authenticate();
@@ -67,15 +95,17 @@ int main() {
 
     while (true) {
         showMenu(session);
-        int choice = input_utils::readMenuChoice(0, 2);
+        int choice = input_utils::readMenuChoice(0, 3);
         if (choice == 0) {
             std::cout << "Signing off, " << session.username << ".\n";
             break;
         }
         if (choice == 1) {
             runMarksCalculator();
-        } else {
+        } else if (choice == 2) {
             runProfileScreen(book, session);
+        } else {
+            runDashboard(board);
         }
     }
     return 0;

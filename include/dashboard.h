@@ -33,6 +33,11 @@ public:
     // fills chartWidth columns.
     void renderBarChart() const;
 
+    // Adds a row and immediately redraws every panel, so the totals on
+    // screen can never lag behind the marks that were just entered.
+    void recordGradeEntry(const std::string &name, int marks, int maxMarks = 100);
+    void refresh() const;
+
     static const int requiredAttendance = 75;
     static const int chartWidth = 40;
 
