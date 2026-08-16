@@ -1,0 +1,18 @@
+# Compiled objects and binaries
+*.o
+*.d
+*.out
+a.out
+bin/
+build/
+
+# Editor and OS noise
+.vscode/
+.idea/
+.DS_Store
+*.swp
+*~
+
+# Local, machine specific settings
+config.local
+portal.log
