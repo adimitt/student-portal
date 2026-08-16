@@ -22,8 +22,13 @@ public:
     const StudentProfile *findByRoll(const std::string &rollNumber) const;
     size_t size() const;
 
+    // Prints one record as a label/value block with the values aligned.
+    void render(const StudentProfile &profile) const;
+    void renderAll() const;
+
 private:
     std::vector<StudentProfile> profiles_;
+    static const int labelWidth = 12;
 };
 
 #endif
