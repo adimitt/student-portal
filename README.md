@@ -52,3 +52,19 @@ The executable is written to `bin/portal` and can also be launched directly:
 ```
 ./bin/portal
 ```
+
+## Directory layout
+
+```
+student-portal/
+├── src/        implementation files, one translation unit per module
+├── include/    public headers shared between modules
+├── data/       plain text fixtures loaded at startup
+├── docs/       notes carried over from the legacy portal
+├── legacy/     original single file portal, excluded from the build
+├── Makefile    build entry point
+└── README.md
+```
+
+`bin/` is produced by the build and is deliberately not tracked; see
+`.gitignore`.
