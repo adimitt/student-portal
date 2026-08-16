@@ -19,6 +19,10 @@ public:
     double percentage(const std::vector<int> &marks, int maxPerSubject) const;
     double weightedAverage(const std::vector<double> &marks,
                            const std::vector<double> &weights) const;
+
+    // Grade reporting on the ten point scale.
+    double gpaFromPercentage(double percentage) const;
+    char letterGrade(double percentage) const;
 };
 
 #endif
