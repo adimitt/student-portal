@@ -24,18 +24,20 @@ void showMenu(const Session &session) {
               << "Select an option: ";
 }
 
-void runMarksCalculator() {
+void runMarksCalculator(const SettingsStore &settings) {
     Calculator calc;
-    GradeScale scale;
+    // The scale the student sees is the one configured in settings.
+    GradeScale scale(settings.usesStrictScale());
 
     std::cout << "Number of subjects (1-10): ";
     int subjects = input_utils::readMenuChoice(1, 10);
     std::vector<int> marks = input_utils::readMarks(subjects, 100);
 
     double pct = calc.percentage(marks, 100);
-    std::cout << std::fixed << std::setprecision(2);
+    std::cout << std::fixed << std::setprecision(settings.current().decimalPlaces);
     std::cout << "Total      : " << calc.total(marks) << " / " << subjects * 100 << "\n";
     std::cout << "Percentage : " << pct << " %\n";
+    std::cout << "Scale      : " << settings.current().gradeScale << "\n";
     std::cout << "GPA        : " << scale.gpaFromPercentage(pct) << "\n";
     std::cout << "Grade      : " << scale.letterGrade(pct) << "\n";
     std::cout << "Result     : " << (scale.isPass(pct) ? "PASS" : "FAIL") << "\n";
@@ -108,7 +110,7 @@ int main() {
             break;
         }
         if (choice == 1) {
-            runMarksCalculator();
+            runMarksCalculator(settings);
         } else if (choice == 2) {
             runProfileScreen(book, session);
         } else if (choice == 3) {
