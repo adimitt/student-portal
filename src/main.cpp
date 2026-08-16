@@ -1,3 +1,4 @@
+#include "auth.h"
 #include "calculator.h"
 #include "grade_scale.h"
 #include "input_utils.h"
@@ -8,10 +9,10 @@
 
 namespace {
 
-void showMenu() {
-    std::cout << "\n=== Student Portal ===\n"
+void showMenu(const Session &session) {
+    std::cout << "\n=== Student Portal (" << session.username << ") ===\n"
               << "1. Marks calculator\n"
-              << "0. Exit\n"
+              << "0. Sign out\n"
               << "Select an option: ";
 }
 
@@ -37,11 +38,18 @@ void runMarksCalculator() {
 int main() {
     std::cout << "Student portal starting up.\n";
 
+    AuthStore store;
+    Session session = store.authenticate();
+    if (!session.active) {
+        std::cout << "Exiting, authentication failed.\n";
+        return 1;
+    }
+
     while (true) {
-        showMenu();
+        showMenu(session);
         int choice = input_utils::readMenuChoice(0, 1);
         if (choice == 0) {
-            std::cout << "Signing off.\n";
+            std::cout << "Signing off, " << session.username << ".\n";
             break;
         }
         runMarksCalculator();
